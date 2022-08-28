@@ -2,6 +2,9 @@
 @port = 5000
 @host = {{hostname}}:{{port}}
 
+GET {{host}}/status HTTP/1.1
+###
+
 GET {{host}}/barcode HTTP/1.1
 ###
 

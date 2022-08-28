@@ -3,37 +3,28 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/tayalone/barcode-hex-go/model/rdb"
 )
 
 func main() {
-	// dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
-	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s",
-		os.Getenv("RDM_HOST"),
-		os.Getenv("RDM_USER"),
-		os.Getenv("RDM_PASSWORD"),
-		os.Getenv("RDM_DB"),
-		os.Getenv("RDM_PORT"),
-		os.Getenv("TIME_ZONE"))
-
-	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-
-	fmt.Println("wait a minute")
+	rdb.Connect()
 
 	r := gin.Default()
 	r.GET("/status", func(c *gin.Context) {
+		_, errRDB := rdb.GetDbInstance()
+		if errRDB != nil {
+			c.JSON(http.StatusTeapot, gin.H{
+				"message": errRDB.Error(),
+			})
+			return
+		}
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": "OK",
 		})
+		return
 	})
 
 	barcode := r.Group("/barcode")
