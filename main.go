@@ -3,11 +3,30 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
+	// dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
+	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s",
+		os.Getenv("RDM_HOST"),
+		os.Getenv("RDM_USER"),
+		os.Getenv("RDM_PASSWORD"),
+		os.Getenv("RDM_DB"),
+		os.Getenv("RDM_PORT"),
+		os.Getenv("TIME_ZONE"))
+
+	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+
 	fmt.Println("wait a minute")
 
 	r := gin.Default()
