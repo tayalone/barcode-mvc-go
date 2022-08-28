@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  go-barcode:
+    image: cosmtrek/air
+    working_dir: /project
+    volumes:
+      - ./:/project/
+    ports:
+      - "5000:8080"
+    command: air
