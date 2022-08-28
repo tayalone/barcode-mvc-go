@@ -6,3 +6,31 @@ GET {{host}}/barcode HTTP/1.1
 ###
 
 GET {{host}}/barcode/1 HTTP/1.1
+
+###
+
+POST {{host}}/barcode HTTP/1.1
+content-type: application/json
+
+{
+    "courierCode": "DHL",
+    "isCod": true,
+    "startBarcode": "EA00000000XTH",
+    "batchSize": 10000
+}
+###
+
+PATCH  {{host}}/barcode/1 HTTP/1.1
+content-type: application/json
+
+{
+    "courierCode": "DHL",
+    "isCod": true,
+    "batchSize": 10000
+}
+
+###
+DELETE  {{host}}/barcode/1 HTTP/1.1
+
+
+###

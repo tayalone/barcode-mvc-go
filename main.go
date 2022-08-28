@@ -69,36 +69,36 @@ func main() {
 			BatchSize   uint32 `json:"batchSize" binding:"required"`
 		}
 
-		// barcode.PATCH("/", func(c *gin.Context) {
-		// 	var getByID getByID
-		// 	if err := c.ShouldBindUri(&getByID); err != nil {
-		// 		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
-		// 		return
-		// 	}
-		// 	var update barCodeUpdate
-		// 	if err := c.ShouldBindJSON(&update); err != nil {
-		// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		// 		return
-		// 	}
-		// 	c.JSON(http.StatusOK, gin.H{
-		// 		"message": "OK",
-		// 		"todo":    fmt.Sprintf("Update Condition ID: %d", getByID.id),
-		// 		"update":  update,
-		// 	})
-		// })
+		barcode.PATCH("/:id", func(c *gin.Context) {
+			var gi getID
+			if err := c.ShouldBindUri(&gi); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+				return
+			}
+			var update barCodeUpdate
+			if err := c.ShouldBindJSON(&update); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+			c.JSON(http.StatusOK, gin.H{
+				"message": "OK",
+				"todo":    fmt.Sprintf("Update Condition ID: %d", gi.ID),
+				"update":  update,
+			})
+		})
 
-		// barcode.DELETE("/:id", func(c *gin.Context) {
-		// 	var getByID getByID
-		// 	if err := c.ShouldBindUri(&getByID); err != nil {
-		// 		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
-		// 		return
-		// 	}
+		barcode.DELETE("/:id", func(c *gin.Context) {
+			var gi getID
+			if err := c.ShouldBindUri(&gi); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+				return
+			}
 
-		// 	c.JSON(http.StatusOK, gin.H{
-		// 		"message": "OK",
-		// 		"todo":    fmt.Sprintf("Remove Condition ID: %d", getByID.id),
-		// 	})
-		// })
+			c.JSON(http.StatusOK, gin.H{
+				"message": "OK",
+				"todo":    fmt.Sprintf("Remove Condition ID: %d", gi.ID),
+			})
+		})
 
 	}
 
