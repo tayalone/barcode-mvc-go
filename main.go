@@ -26,16 +26,11 @@ func main() {
 			})
 			return
 		}
+		barcode, _ := barcodeController.Gen(1, "DHL", true)
 
 		c.JSON(http.StatusOK, gin.H{
 			"message": "OK",
-		})
-		return
-	})
-
-	r.GET("/error", func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": "OK",
+			"barcode": barcode,
 		})
 		return
 	})
