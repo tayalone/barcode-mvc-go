@@ -31,6 +31,28 @@ func main() {
 		return
 	})
 
+	order := r.Group("/")
+	{
+		type orderInput struct {
+			CourierCode  string `json:"courierCode" binding:"required"`
+			IsCod        bool   `json:"isCod" binding:"required"`
+			StartBarcode string `json:"startBarcode" binding:"required"`
+			BatchSize    uint32 `json:"batchSize" binding:"required"`
+		}
+
+		order.POST("/", func(c *gin.Context) {
+			var input orderInput
+			if err := c.ShouldBindJSON(&input); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+			c.JSON(http.StatusOK, gin.H{
+				"message": "OK",
+				"todo":    "Create New Barcode ",
+				"input":   input,
+			})
+		})
+	}
 	barcode := r.Group("/barcode")
 	{
 		barcode.GET("/", func(c *gin.Context) {
