@@ -33,6 +33,13 @@ func main() {
 		return
 	})
 
+	r.GET("/error", func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "OK",
+		})
+		return
+	})
+
 	order := r.Group("/order")
 	{
 		order.POST("/", orderController.Create)

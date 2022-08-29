@@ -57,9 +57,9 @@ func GetByID(c *gin.Context) {
 	db := myRdb.GetDb()
 
 	bc := &rdb.BarcodeCondition{}
-	db.First(bc, gi.ID)
+	r := db.First(bc, gi.ID)
 
-	if bc.ID == 0 {
+	if r.RowsAffected == 0 {
 		c.JSON(http.StatusOK, gin.H{
 			"message":          "OK",
 			"barCodeCondition": nil,
@@ -150,9 +150,9 @@ func UpdateByID(c *gin.Context) {
 	db.Table(tableName).Count(&currentID)
 
 	bc := &rdb.BarcodeCondition{}
-	db.First(bc, gi.ID)
-	if bc.ID == 0 {
-		c.JSON(http.StatusNoContent, gin.H{
+	r := db.First(bc, gi.ID)
+	if r.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Condition Not Found",
 		})
 		return
@@ -191,9 +191,9 @@ func DeleteByID(c *gin.Context) {
 	myRdb, _ := rdb.GetDbInstance()
 	db := myRdb.GetDb()
 	bc := &rdb.BarcodeCondition{}
-	db.First(bc, gi.ID)
-	if bc.ID == 0 {
-		c.JSON(http.StatusNoContent, gin.H{
+	r := db.First(bc, gi.ID)
+	if r.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
 			"message": "Condition Not Found",
 		})
 		return
