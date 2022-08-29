@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/tayalone/barcode-mvc-go/model/rdb"
+	"github.com/tayalone/barcode-mvc-go/model/rdb/courierorder"
 )
 
 type getID struct {
@@ -139,11 +140,42 @@ func UpdateByID(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	myRdb, _ := rdb.GetDbInstance()
+	db := myRdb.GetDb()
+
+	tableName := courierorder.GetTableName(update.CourierCode, update.IsCod)
+
+	var currentID int64
+	db.Table(tableName).Count(&currentID)
+
+	bc := &rdb.BarcodeCondition{}
+	db.First(bc, gi.ID)
+	if bc.ID == 0 {
+		c.JSON(http.StatusNoContent, gin.H{
+			"message": "Condition Not Found",
+		})
+		return
+	}
+
+	newCondLogID := bc.PrevCondLogID + uint(update.BatchSize) - 1
+
+	if uint(currentID) >= newCondLogID {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": fmt.Sprintf("Batch Size Must Bigger than %d", update.BatchSize),
+		})
+		return
+	}
+
+	bc.BatchSize = update.BatchSize
+	bc.CondLogID = bc.PrevCondLogID + uint(update.BatchSize)
+
+	db.Save(bc)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "OK",
-		"todo":    fmt.Sprintf("Update Condition ID: %d", gi.ID),
-		"update":  update,
 	})
+	return
 }
 
 /*
@@ -156,8 +188,32 @@ func DeleteByID(c *gin.Context) {
 		return
 	}
 
+	myRdb, _ := rdb.GetDbInstance()
+	db := myRdb.GetDb()
+	bc := &rdb.BarcodeCondition{}
+	db.First(bc, gi.ID)
+	if bc.ID == 0 {
+		c.JSON(http.StatusNoContent, gin.H{
+			"message": "Condition Not Found",
+		})
+		return
+	}
+
+	tableName := courierorder.GetTableName(bc.CourierCode, bc.IsCod)
+
+	var currentID int64
+	db.Table(tableName).Count(&currentID)
+
+	if currentID >= int64(bc.PrevCondLogID) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Can not Remove used Barcode",
+		})
+		return
+	}
+
+	db.Delete(&rdb.BarcodeCondition{}, gi.ID)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "OK",
-		"todo":    fmt.Sprintf("Remove Condition ID: %d", gi.ID),
 	})
 }
