@@ -13,7 +13,7 @@ import (
 func main() {
 	myRdb := rdb.Connect()
 
-	if myRdb.GetStatus() && os.Getenv("RDM_HOST") != "" {
+	if myRdb.GetStatus() && os.Getenv("RDM_MIGRATION") == "true" {
 		myRdb.AutoMigrate()
 	}
 
@@ -40,7 +40,7 @@ func main() {
 	barcode := r.Group("/barcode")
 	{
 		barcode.GET("/", barcodeController.GetAll)
-		barcode.GET("/:id", barcodeController.GetAll)
+		barcode.GET("/:id", barcodeController.GetByID)
 		barcode.POST("/", barcodeController.Create)
 		barcode.PATCH("/:id", barcodeController.UpdateByID)
 		barcode.DELETE("/:id", barcodeController.DeleteByID)

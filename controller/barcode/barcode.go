@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/tayalone/barcode-mvc-go/model/rdb"
 )
 
 type getID struct {
@@ -28,9 +29,16 @@ type barCodeUpdate struct {
 GetAll is Get All Barcode Condition
 */
 func GetAll(c *gin.Context) {
+	myRdb, _ := rdb.GetDbInstance()
+	db := myRdb.GetDb()
+
+	var bcs []rdb.BarcodeCondition
+
+	db.Order("created_at desc,id desc").Find(&bcs)
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "OK",
-		"todo":    "Get all condition",
+		"message":           "OK",
+		"barCodeConditions": bcs,
 	})
 }
 
@@ -44,10 +52,25 @@ func GetByID(c *gin.Context) {
 		return
 	}
 
+	myRdb, _ := rdb.GetDbInstance()
+	db := myRdb.GetDb()
+
+	bc := &rdb.BarcodeCondition{}
+	db.First(bc, gi.ID)
+
+	if bc.ID == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"message":          "OK",
+			"barCodeCondition": nil,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "OK",
-		"todo":    fmt.Sprintf("Get Condition ID: %d", gi.ID),
+		"message":          "OK",
+		"barCodeCondition": bc,
 	})
+	return
 }
 
 /*
