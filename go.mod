@@ -1,4 +1,4 @@
-module github.com/tayalone/barcode-hex-go
+module github.com/tayalone/barcode-mvc-go
 
 go 1.19
 

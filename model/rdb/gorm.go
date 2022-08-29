@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/tayalone/barcode-hex-go/model/rdb/courierorder"
+	"github.com/tayalone/barcode-mvc-go/model/rdb/courierorder"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

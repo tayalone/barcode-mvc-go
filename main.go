@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tayalone/barcode-hex-go/model/rdb"
+	"github.com/tayalone/barcode-mvc-go/model/rdb"
 )
 
 func main() {
