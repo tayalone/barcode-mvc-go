@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/tayalone/barcode-hex-go/model/rdb/courierorder"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -77,10 +78,54 @@ func (rdb *RDB) GetStatus() bool {
 // AutoMigrate Watch And Validate Data
 func (rdb *RDB) AutoMigrate() {
 	db := rdb.db
-	db.Set("gorm:table_options", "ENGINE=InnoDB")
+	// db.Set("gorm:table_options", "ENGINE=InnoDB")
 
-	// barcode_condition
+	// /  about 'barcode_condition'
 	if (db.Migrator().HasTable(&BarcodeCondition{})) {
-		db.AutoMigrate(&BarcodeCondition{})
+		log.Println("Table Existing, Drop IT")
+
+		db.Migrator().DropTable(&BarcodeCondition{})
 	}
+	db.AutoMigrate(&BarcodeCondition{})
+	log.Println("Create 'barcode_conditions'")
+
+	// / Add Initail Data
+	initBCC := []BarcodeCondition{
+		{
+			CourierCode:   "DHL",
+			IsCod:         true,
+			StartBarcode:  "DEC00000001XTH",
+			BatchSize:     100,
+			PrevCondLogID: 1,
+			CondLogID:     101,
+		}, {
+			CourierCode:   "DHL",
+			IsCod:         false,
+			StartBarcode:  "DEN00000001XTH",
+			BatchSize:     300,
+			PrevCondLogID: 1,
+			CondLogID:     301,
+		},
+	}
+	db.Create(initBCC)
+
+	log.Println("Create Initil Data")
+
+	// /  about 'courier_order_dhl'
+	if (db.Migrator().HasTable(&courierorder.CourierOderDhl{})) {
+		log.Println("Table Existing, Drop IT")
+
+		db.Migrator().DropTable(&courierorder.CourierOderDhl{})
+	}
+	db.AutoMigrate(&courierorder.CourierOderDhl{})
+	log.Println("Create 'courier_order_dhl'")
+
+	// /  about 'courier_order_dhl_cod'
+	if (db.Migrator().HasTable(&courierorder.CourierOderDhlCod{})) {
+		log.Println("Table Existing, Drop IT")
+
+		db.Migrator().DropTable(&courierorder.CourierOderDhlCod{})
+	}
+	db.AutoMigrate(&courierorder.CourierOderDhlCod{})
+	log.Println("Create 'courier_order_dhl_cod'")
 }
