@@ -27,11 +27,11 @@ func Create(c *gin.Context) {
 	myRdb, _ := rdb.GetDbInstance()
 	db := myRdb.GetDb()
 
-	orderStruct := courierorder.GetTableStruct(input.CourierCode, input.IsCod)
+	orderInst := courierorder.GetTableStruct(input.CourierCode, input.IsCod)
 
-	orderStruct.SetBarcode("")
+	orderInst.SetBarcode("")
 
-	r := db.Create(orderStruct)
+	r := db.Create(orderInst)
 
 	if r.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -39,13 +39,13 @@ func Create(c *gin.Context) {
 		})
 	}
 
-	barcode, err := barcode.Gen(orderStruct.GetID(), input.CourierCode, input.IsCod)
+	barcode, err := barcode.Gen(orderInst.GetID(), input.CourierCode, input.IsCod)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Create Barcode Fail",
 		})
 	}
-	u := db.Model(orderStruct).Where("id = ?", orderStruct.GetID()).Update("barcode", barcode)
+	u := db.Model(orderInst).Where("id = ?", orderInst.GetID()).Update("barcode", barcode)
 
 	if u.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -57,6 +57,6 @@ func Create(c *gin.Context) {
 		"message":     "OK",
 		"courierCode": input.CourierCode,
 		"isCod":       input.IsCod,
-		"order":       orderStruct,
+		"order":       orderInst,
 	})
 }
