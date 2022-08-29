@@ -8,8 +8,6 @@ content-type: application/json
 
 {
     "courierCode": "DHL",
-    "isCod": true,
-    "startBarcode": "EA00000000XTH",
-    "batchSize": 10000
+    "isCod": true
 }
 ###
