@@ -23,6 +23,7 @@ func (c *CourierOderDhlCod) GetData() Tmp {
 	}
 }
 
+// SetBarcode set initil Barcode
 func (c *CourierOderDhlCod) SetBarcode(barcode string) {
 	c.Barcode = &barcode
 }

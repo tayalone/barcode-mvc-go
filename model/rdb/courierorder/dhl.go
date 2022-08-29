@@ -23,15 +23,7 @@ func (c *CourierOderDhl) GetData() Tmp {
 	}
 }
 
+// SetBarcode set initil Barcode
 func (c *CourierOderDhl) SetBarcode(barcode string) {
 	c.Barcode = &barcode
 }
-
-// // SetValue get Tmp
-// func (c CourierOderDhl) GetInstant(barcode string) Tmp {
-// 	// c.Barcode = &barcode
-
-// 	// myRdb, _ := rdb.GetDbInstance()
-
-// 	return c
-// }
