@@ -94,14 +94,14 @@ func (rdb *RDB) AutoMigrate() {
 		{
 			CourierCode:   "DHL",
 			IsCod:         true,
-			StartBarcode:  "DEC00000001XTH",
+			StartBarcode:  "DCA00000001XTH",
 			BatchSize:     100,
 			PrevCondLogID: 1,
 			CondLogID:     101,
 		}, {
 			CourierCode:   "DHL",
 			IsCod:         false,
-			StartBarcode:  "DEN00000001XTH",
+			StartBarcode:  "DNA00000001XTH",
 			BatchSize:     300,
 			PrevCondLogID: 1,
 			CondLogID:     301,

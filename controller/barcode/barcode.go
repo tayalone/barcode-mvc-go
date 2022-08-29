@@ -82,10 +82,46 @@ func Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	myRdb, _ := rdb.GetDbInstance()
+	db := myRdb.GetDb()
+
+	lastBc := &rdb.BarcodeCondition{}
+	resLasCond := db.Where(
+		&rdb.BarcodeCondition{
+			CourierCode: input.CourierCode,
+			IsCod:       input.IsCod,
+		},
+	).First(lastBc)
+
+	if resLasCond.RowsAffected != 1 {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Previous Condition Not Found",
+		})
+		return
+	}
+
+	newBc := &rdb.BarcodeCondition{
+		CourierCode:   input.CourierCode,
+		IsCod:         input.IsCod,
+		StartBarcode:  input.StartBarcode,
+		BatchSize:     input.BatchSize,
+		PrevCondLogID: lastBc.CondLogID,
+		CondLogID:     lastBc.CondLogID + uint(input.BatchSize),
+	}
+
+	resCreate := db.Create(newBc)
+
+	if resCreate.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Previous Inser Condition Error",
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "OK",
-		"todo":    "Create New Barcode Condition",
-		"input":   input,
+		"message":          "OK",
+		"barCodeCondition": newBc,
 	})
 }
 

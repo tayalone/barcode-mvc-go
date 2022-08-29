@@ -18,7 +18,7 @@ content-type: application/json
 {
     "courierCode": "DHL",
     "isCod": true,
-    "startBarcode": "EA00000000XTH",
+    "startBarcode": "DCB00000001XTH",
     "batchSize": 10000
 }
 ###
