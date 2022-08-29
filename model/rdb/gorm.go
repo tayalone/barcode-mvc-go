@@ -73,3 +73,14 @@ func (rdb *RDB) GetDb() *gorm.DB {
 func (rdb *RDB) GetStatus() bool {
 	return myRdb.db != nil && myRdb.errMsg == ""
 }
+
+// AutoMigrate Watch And Validate Data
+func (rdb *RDB) AutoMigrate() {
+	db := rdb.db
+	db.Set("gorm:table_options", "ENGINE=InnoDB")
+
+	// barcode_condition
+	if (db.Migrator().HasTable(&BarcodeCondition{})) {
+		db.AutoMigrate(&BarcodeCondition{})
+	}
+}

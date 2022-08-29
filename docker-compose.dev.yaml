@@ -12,6 +12,13 @@ services:
       - "5432:5432"
     volumes:
       - rdb:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - rdb
   go-barcode:
     image: cosmtrek/air
     working_dir: /project

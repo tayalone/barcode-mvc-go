@@ -9,7 +9,11 @@ import (
 )
 
 func main() {
-	rdb.Connect()
+	myRdb := rdb.Connect()
+
+	if myRdb.GetStatus() {
+		myRdb.AutoMigrate()
+	}
 
 	r := gin.Default()
 	r.GET("/status", func(c *gin.Context) {
