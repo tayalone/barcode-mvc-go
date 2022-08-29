@@ -32,6 +32,7 @@ services:
       - RDM_USER=postgres
       - RDM_PASSWORD=example
       - RDM_DB=testing
+      - RDM_MIGRATION=
       - TIME_ZONE=Asia/Bangkok
     command: air
     depends_on:

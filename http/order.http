@@ -1,0 +1,16 @@
+@hostname = http://localhost
+@port = 5000
+@host = {{hostname}}:{{port}}
+
+### create order 
+POST {{host}}/order HTTP/1.1
+
+content-type: application/json
+
+{
+    "courierCode": "DHL",
+    "isCod": true,
+    "startBarcode": "EA00000000XTH",
+    "batchSize": 10000
+}
+###
